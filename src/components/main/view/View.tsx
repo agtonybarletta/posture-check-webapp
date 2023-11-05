@@ -1,61 +1,54 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {memo, useCallback, useContext, useEffect, useState} from "react";
 import './View.css';
-import {Card, Paper, Box, Button} from '@mui/material'
-import WebcamServiceContext from "../../../services/webcam/WebcamServiceContext";
-import WebcamService from "../../../services/webcam/WebcamService";
-import {alignProperty} from "@mui/material/styles/cssUtils";
+import {Card, Paper, Box, Button, Stack} from '@mui/material'
 
-function View(props: any) {
+const View = memo((props: any) => {
 
-	const webcamService: WebcamService = useContext(WebcamServiceContext);
+	const videoRef = React.useRef<HTMLVideoElement| null>(null);
 	let [isShown, setIsShown] =  useState(false);
-	
-	let startWebcam = () => {
-		webcamService.startWebcam();
-		setIsShown(true);
-	}
-	let stopWebcam = () => {
-		webcamService.stopWebcam();
+
+  const onStartWebcam = useCallback(() => {
+    // TODO: manage errros
+    if (videoRef && videoRef.current ) {
+      props.onStartWebcam(videoRef.current);
+      setIsShown(true);
+    }
+  }, []);
+
+	const onStopWebcam = () => {
 		setIsShown(false);
+    props.onStopWebcam();
 	}
 
-	let startCapturing = () => {
-		setInterval(() => webcamService.capture(), 3000);
-	}
-	//useEffect(() => startWebcam());
-
-/*
-	  */
   return (
-    <Paper
-	elevation={10}
-	className="View" sx={{
+  <Box sx={{
 		flexDirection: 'column',
 		justifyContent: 'center',
-		alignProperty: 'center'}}>
+		alignProperty: 'center',
+		height: '100%'
+  }}>
+
+		<Stack direction="column" justifyContent="flex-end" spacing={2} alignItems="center" sx={{ height: '100%' }}>
 	<Box
 		sx={{ 
 			visibility: isShown ? 'visible': 'hidden', 
 			padding: 3,
 			zIndex: 'modal',
-			minHeight: '400px',
-			minWidth: '400px',
+
 		}}
 		justifyContent = "center" 
 		alignItems="center">
-	   	<video id="video" style={{maxWidth: "100%", height: "auto" }}  autoPlay></video>
 
+	   	<video id="video" style={{maxWidth: "100%", height: "auto" }}  autoPlay ref={videoRef}></video>
 	</Box>
 
-	<Box sx={{ 
-			paddingBottom: 3,
-	}} >
-		<Button id="startBtn" onClick={startWebcam}>Open Webcam</Button>
-		<Button id="startBtn" onClick={stopWebcam}>Stop Webcam</Button>
-		<Button id="captureBtn" onClick={startCapturing}>Capture</Button>
-	  </Box>
-    </Paper>
+		<Stack direction="row" spacing={2} pb={2}>
+			<Button variant="contained" id="startBtn" onClick={onStartWebcam}>Open Webcam</Button>
+			<Button variant="contained" id="startBtn" onClick={onStopWebcam}>Stop Webcam</Button>
+		</Stack>
+		</Stack>
+    </Box>
   );
-}
+});
 
 export default View;

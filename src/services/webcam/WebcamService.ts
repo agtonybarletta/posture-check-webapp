@@ -1,41 +1,38 @@
-import {useState} from 'react';
-import {startWebcam, stopWebcam} from './webcam'
+import { useState } from "react";
+import { Webcam } from "../../lib/webcam/webcam";
 class WebcamService {
-	public canvas: HTMLCanvasElement | undefined;
-	public callback: Function = () => {};
-	startWebcam: any = () => {
-		let constrains: MediaTrackConstraints = {
-			frameRate:5 
-		}
-		startWebcam(constrains);
-	}
-	stopWebcam: any = () => {
-		stopWebcam()
-	}
-	capture: any = () => {
-		//this.canvas = document.createElement('canvas');		
-		var video = <HTMLVideoElement> document.getElementById("video");
-		video.play().then( () => {
-			this.canvas = <HTMLCanvasElement> document.getElementById('canvas');
-			this.canvas.width = video.width;
-			this.canvas.height = video.height;
 
-			const context = this.canvas.getContext('2d');
-			const something = video;
-			if (context) {
-				context.drawImage( something, 0, 0, video.width, video.height);
-				console.log(something);
-				console.log(context);
-				var capture = <HTMLImageElement> document.getElementById('capture');
-				  var dataUrl = this.canvas.toDataURL();
-				  capture.src = dataUrl;
-				  this.callback("caputured " + Date.now())
-			}
-		});
-	}
-	setCallback: any = (callback: Function) => {
-		this.callback =	callback;
-	}
+  public webcam: Webcam = new Webcam();
+  public callback: Function = () => {};
 
-};
+  startWebcam: any = () => {
+    let constrains: MediaTrackConstraints = {
+      frameRate: 5,
+    };
+    console.log('starting webcam');
+    this.webcam.start(constrains).then( () => {
+      console.log('webcam started');
+
+    });
+  };
+  stopWebcam: any = () => {
+    this.webcam.stop();
+  };
+
+  capture: any = () => {
+    return this.webcam.capture();
+  };
+
+  getVideoDimension = (): any => {
+    return this.webcam.getVideoDimension();
+  }
+
+  addCanvas = (canvas: HTMLCanvasElement) : any => {
+    return this.webcam.addCanvas(canvas);
+  }
+
+  addVideo = (video: HTMLVideoElement) : any => {
+    return this.webcam.addVideo(video);
+  }
+}
 export default WebcamService;

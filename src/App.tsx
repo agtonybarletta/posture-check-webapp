@@ -27,10 +27,8 @@ function App() {
   return (
   <ServicesProvider>
     <div className="App">
-      <Container>
         <Header></Header>
         <Main></Main>
-      </Container>
     </div>
 	</ServicesProvider>
   );

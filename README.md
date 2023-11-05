@@ -45,11 +45,27 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 
 To learn React, check out the [React documentation](https://reactjs.org/).
 
-## TODO
+## Posture check architecture
 
-- [ ] make sure view & panel are responsive
-- [ ] hide canvas
-- [ ] move caputre to debug panel
-- [ ] add switch shwo capture
-- [ ] move basic text to panel
-- [ ]  fix communication between services & text
+Webcam module manages wecam operations:
+    - start
+    - stop
+    - single capture
+    - update (interval caputre)
+Along with those operations it offers a promise to the update event.
+The image is store in a canvas HtmlElement that the rest of the application can use
+
+The Model module read the cavas produced by the webcam module and offer a prediction (promice to the update event)
+
+View module read the canvas and copy/modify the webcam data for visualization purposes
+
+## Milestones
+
+v 1.0.0
+- [ ] rewrite README.md
+- [ ] add alerting system with browser notifications
+- [ ] add landing page
+- [ ] add additional pages (about, info etc)
+- [ ] predict posture at interval (use switch and slider) 
+
+
