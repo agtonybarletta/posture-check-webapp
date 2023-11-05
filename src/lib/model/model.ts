@@ -5,7 +5,7 @@ class Model {
   
   private model!: LayersModel;
   //private MOBILENET_MODEL_PATH ='https://tfhub.dev/google/tfjs-model/imagenet/mobilenet_v2_100_224/classification/3/default/1';
-  private MODEL_PATH ='http://localhost:3000/model/model1/model.json';
+  private MODEL_PATH ='/model/model1/model.json';
 
   private canvas: HTMLCanvasElement;
 
