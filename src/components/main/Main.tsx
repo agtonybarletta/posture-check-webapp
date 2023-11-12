@@ -25,7 +25,7 @@ function Main(props: any) {
 		if(loopState) {
 			let tmp = window.setInterval( () => {
 				onCapture();
-			}, 100);
+			}, 500);
 			setIntervalHandler(tmp);
 		} else {
 			window.clearInterval(intervalHandler);	

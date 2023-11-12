@@ -26,3 +26,5 @@ public/model/*
 !public/model/.gitkeep
 
 /dist
+
+/package-lock.json
