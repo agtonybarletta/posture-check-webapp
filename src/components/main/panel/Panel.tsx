@@ -1,5 +1,5 @@
 import { Box, Button, Stack, Switch } from "@mui/material";
-import {  useEffect, useState } from "react";
+import {  useCallback, useEffect, useState } from "react";
 import { LineChart } from '@mui/x-charts/LineChart'
 
 
@@ -7,9 +7,9 @@ const Panel = (props: any) => {
 
   const MAX_VIEW_ELEMENT = 20;
 
-  const slideArray = (array: any[]) => {
+  const slideArray = useCallback((array: any[]) => {
     return array.slice(Math.max(array.length - MAX_VIEW_ELEMENT, 0));
-  }
+  },[]);
   let [text, setText] = useState("");
   let [correct, setCorrect] = useState([] as number[]);
   let [incorrect, setIncorrect] = useState([] as number[]);

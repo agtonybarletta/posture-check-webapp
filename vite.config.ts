@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import viteTsconfigPaths from 'vite-tsconfig-paths'
 import browserslistToEsbuild from 'browserslist-to-esbuild'
+import { resolve } from 'path'
 
 export default defineConfig({
     // depending on your application, base can also be "/"
@@ -14,7 +15,19 @@ export default defineConfig({
         port: 3000, 
     },
     build: {
-    // --> ["chrome79", "edge92", "firefox91", "safari13.1"]
-    target: browserslistToEsbuild(), 
-  },
+      target: browserslistToEsbuild(),
+      outDir: 'dist',
+      rollupOptions: {
+        /* this may be very useful to move ./about.html into ./src and  map the output
+         * to any dist/<folder> we want
+         * https://rollupjs.org/configuration-options/#input
+         * 
+         input: {
+        main: resolve(__dirname, 'src/index.tsx'), 
+        main2: resolve(__dirname, './index.html'),
+        nested: resolve(__dirname, 'src/static/about.html'),
+        */
+        input: ['src/index.tsx', './index.html', './about.html']
+      },
+    }
 })
