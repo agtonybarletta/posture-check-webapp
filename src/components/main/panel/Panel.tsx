@@ -1,6 +1,7 @@
 import { Box, Button, Stack, Switch } from "@mui/material";
 import {  useCallback, useEffect, useState } from "react";
 import { LineChart } from '@mui/x-charts/LineChart'
+import RetrainButton from "../retrain/RetrainButton";
 
 
 const Panel = (props: any) => {
@@ -66,6 +67,7 @@ const Panel = (props: any) => {
               Capure
             </Button>
             <Switch onChange={onToggleLoop} checked={props.loopState} />
+            <RetrainButton></RetrainButton>
           </Stack>
           { correct.length > 0 &&
           <LineChart
