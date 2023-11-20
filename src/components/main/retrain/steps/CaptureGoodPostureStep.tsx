@@ -1,25 +1,34 @@
 import { CircularProgress, Typography } from "@mui/material";
-import React from "react";
+import React, {useCallback, useState} from "react";
+import Timer from "../Timer";
 import GenericStep from "./GenericStep";
+import Done from "@mui/icons-material/Done"
 
-const CaptureGoodPostureStep = () => {
-  const [progress, setProgress] = React.useState(1);
+const CaptureGoodPostureStep = (props: {complete: () => void}) => {
 
-  React.useEffect(() => {
-    const timer = setInterval(() => {
-      setProgress((prevProgress) =>
-        prevProgress >= 100 ? 0 : prevProgress + 1
-      );
-    }, 100);
-    return () => {
-      clearInterval(timer);
-    };
+  const [step, setStep] = useState("ready" as "ready" | "recording" | "message");
+  const onReady = useCallback(() => {
+    setStep("recording");
+  }, []);
+  const onMessage = useCallback(() => {
+    setStep("message");
+    props.complete();
   }, []);
   return (
     <React.Fragment>
       <GenericStep>
-        <Typography>CaptureGoodPostureStep</Typography>
-        <CircularProgress variant="determinate" value={progress} />
+        {step == "ready" && <React.Fragment>
+          <Timer seconds={10} countdown={true} color="error" onTimeout={onReady}/>
+          <Typography>When circle turns green please keep a good posture</Typography>
+        </React.Fragment>}
+        {step == "recording" && <React.Fragment>
+          <Timer seconds={10} countdown={true} color="success" onTimeout={onMessage}/>
+          <Typography>Keep a good posture</Typography>
+        </React.Fragment>}
+        {step == "message" && <React.Fragment>
+          <Done/>
+          <Typography>Recording completed!</Typography>
+        </React.Fragment>}
       </GenericStep>
     </React.Fragment>
   );

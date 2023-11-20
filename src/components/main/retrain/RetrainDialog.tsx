@@ -20,26 +20,21 @@ import TrainingStep from "./steps/TrainingStep";
 interface RetrainStep {
   label: string;
   component: ReactElement;
+  disableNext: boolean;
 }
 
 const RetrainDialog = (props: { close: () => void; isOpen: boolean }) => {
-  const steps: RetrainStep[] = [
-    { label: "Instructions", component: <InstructionsStep></InstructionsStep> },
-    {
-      label: "Capture good posture",
-      component: <CaptureGoodPostureStep></CaptureGoodPostureStep>,
-    },
-    { label: "Capture poor posture", component: <CapturePoorPostureStep></CapturePoorPostureStep>},
-    { label: "Training and calibration", component: <TrainingStep></TrainingStep>},
-  ];
-
   const [activeStep, setActiveStep] = useState(0);
+  const [nextEnabled, setNextEnabled] = useState(true);
 
   const next = () => {
-    if (activeStep == steps.length - 1)  { 
+    if (activeStep == steps.length - 1) {
       close();
     } else {
       setActiveStep(activeStep + 1);
+      if (steps[activeStep + 1].disableNext == true) {
+        setNextEnabled(false);
+      }
     }
   };
 
@@ -52,7 +47,39 @@ const RetrainDialog = (props: { close: () => void; isOpen: boolean }) => {
   const close = () => {
     setActiveStep(0);
     props.close();
-  }
+  };
+
+  const complete = () => {
+    // enable next button
+    setNextEnabled(true);
+  };
+
+  const steps: RetrainStep[] = [
+    {
+      label: "Instructions",
+      component: <InstructionsStep></InstructionsStep>,
+      disableNext: false,
+    },
+    {
+      label: "Capture good posture",
+      component: (
+        <CaptureGoodPostureStep complete={complete}></CaptureGoodPostureStep>
+      ),
+      disableNext: true,
+    },
+    {
+      label: "Capture poor posture",
+      component: (
+        <CapturePoorPostureStep complete={complete}></CapturePoorPostureStep>
+      ),
+      disableNext: true,
+    },
+    {
+      label: "Training and calibration",
+      component: <TrainingStep></TrainingStep>,
+      disableNext: false,
+    },
+  ];
 
   return (
     <React.Fragment>
@@ -96,12 +123,23 @@ const RetrainDialog = (props: { close: () => void; isOpen: boolean }) => {
           {steps[activeStep].component}
         </DialogContent>
         <DialogActions>
-          <Button variant="contained" autoFocus onClick={back} disabled={activeStep == 0} sx={{marginRight: 'auto'}}>
+          <Button
+            variant="contained"
+            autoFocus
+            onClick={back}
+            disabled={activeStep == 0}
+            sx={{ marginRight: "auto" }}
+          >
             Back
           </Button>
-          <Button variant="contained" autoFocus onClick={next}>
-            {activeStep == steps.length-1 && 'Close'}
-            {activeStep < steps.length-1 && 'Next'}
+          <Button
+            variant="contained"
+            autoFocus
+            onClick={next}
+            disabled={!nextEnabled}
+          >
+            {activeStep == steps.length - 1 && "Close"}
+            {activeStep < steps.length - 1 && "Next"}
           </Button>
         </DialogActions>
       </Dialog>
