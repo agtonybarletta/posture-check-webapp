@@ -7,14 +7,11 @@ import Grid from "@mui/material/Grid";
 import Panel from "./panel/Panel";
 import Paper from "@mui/material/Paper";
 import {Stack} from "@mui/system";
-import WebcamService from "../../services/webcam/WebcamService";
-import WebcamServiceContext from "../../services/webcam/WebcamServiceContext";
 import PostureCheckService from "../../services/PostureCheckService";
 import PostureCheckServiceContext from "../../services/PostureCheckServiceContext";
 
 function Main(props: any) {
   
-	const webcamService: WebcamService = useContext(WebcamServiceContext);
 	const postureCheckService: PostureCheckService = useContext(PostureCheckServiceContext) as PostureCheckService;
 
 	let [intervalHandler, setIntervalHandler] = useState(0);
@@ -34,22 +31,30 @@ function Main(props: any) {
   }, [loopState]);
 
   const onStartWebcam = (video: HTMLVideoElement) => {
-    webcamService.addVideo(video);
-    webcamService.startWebcam();
+    postureCheckService.addVideo(video);
+    postureCheckService.startWebcam();
     console.log(loopState);
   }
 
   const onStopWebcam = () => {
-		webcamService.stopWebcam();
+		postureCheckService.stopWebcam();
     setLoopState(false);
   };
 
 
   const onCapture = () => {
-		  return postureCheckService.capture().then( (data: any) => {
+		  return postureCheckService.captureAndPredict().then( (data: any) => {
         setPred(data);
         return data;
       });
+  };
+
+  const onAddExample = (labelClass: string) => {
+    return postureCheckService.addExample(labelClass)
+  };
+
+  const onFit = () => {
+    postureCheckService.fit();
   };
 
   return (
@@ -88,7 +93,7 @@ function Main(props: any) {
 			  aspectRatio: 420/320,
 			  borderRadius:"25px"
 		}}>
-            <Panel onCapture={onCapture} loopState={loopState} setLoopState={setLoopState} pred={pred}></Panel>
+            <Panel onCapture={onCapture} loopState={loopState} setLoopState={setLoopState} pred={pred} onAddExample={onAddExample} onFit={onFit}></Panel>
           </Paper>
       </Stack>
     </Box>

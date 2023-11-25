@@ -1,5 +1,4 @@
 class Webcam {
-
   public video!: HTMLVideoElement;
   public canvas!: HTMLCanvasElement;
 
@@ -14,7 +13,7 @@ class Webcam {
     this.init();
   }
 
-  public init() {
+  public init(): void {
     this.video = <HTMLVideoElement>document.createElement("video");
     this.canvas = <HTMLCanvasElement>document.createElement("canvas");
   }
@@ -22,7 +21,7 @@ class Webcam {
   public addVideo(video: HTMLVideoElement) {
     this.outputHtmlVideoElements.push(video);
     if (this.isStarted) {
-      video.srcObject = this.video.srcObject
+      video.srcObject = this.video.srcObject;
     }
   }
 
@@ -30,9 +29,10 @@ class Webcam {
     this.outputHtmlCanvasElements.push(canvas);
   }
 
-  
-
-  public start(constraints: MediaTrackConstraints) {
+  public start() {
+    let constraints: MediaTrackConstraints = {
+      frameRate: 5,
+    };
     // CHECK multiple start calls
     // check webcam
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -44,7 +44,7 @@ class Webcam {
       .then((stream: MediaStream) => {
         this.video.srcObject = stream;
         for (let e of this.outputHtmlVideoElements) {
-          console.log('adding video element');
+          console.log("adding video element");
           e.srcObject = this.video.srcObject;
         }
         this.video.addEventListener("loadedmetadata", (event) => {
@@ -94,37 +94,36 @@ class Webcam {
       if (context) {
         context.drawImage(something, 0, 0, this.video.width, this.video.height);
         for (let c of this.outputHtmlCanvasElements) {
-          c.getContext('2d')?.drawImage(something, 0,0, c.width, c.height);
+          c.getContext("2d")?.drawImage(something, 0, 0, c.width, c.height);
         }
         return;
       }
     });
   }
 
-  /* 
-	function processStream(stream) {
-		 const mediaRecorder = new MediaRecorder(stream)
-		let countUploadChunk = 0
+  public captureOnCanvas(canvas: HTMLCanvasElement): Promise<void> {
+    return this.video.play().then(() => {
+      canvas.width = this.video.width;
+      canvas.height = this.video.height;
 
-		/*mediaRecorder.ondataavailable = (data) => {
-			sendFile(data.data, countUploadChunk)
-			countUploadChunk++
-		}
-		* /
-		mediaRecorder.start()
+      const context = canvas.getContext("2d");
+      const something = this.video;
+      if (context) {
+        context.drawImage(something, 0, 0, this.video.width, this.video.height);
+        canvas
+          .getContext("2d")
+          ?.drawImage(something, 0, 0, canvas.width, canvas.height);
+      }
+      return Promise.resolve();
+    });
+  }
 
-		setInterval(() => {
-			mediaRecorder.requestData()
-		}, 500)
-	}
-  */
-  public getVideoDimension(): {h: number, w: number, r: number} {
+  public getVideoDimension(): { h: number; w: number; r: number } {
     return {
       h: this.video.height,
       w: this.video.width,
-      r: this.video.height/this.video.width
-    }
+      r: this.video.height / this.video.width,
+    };
   }
-
 }
 export { Webcam };

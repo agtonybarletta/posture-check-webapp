@@ -62,12 +62,21 @@ const Panel = (props: any) => {
         }}
       >
         <Stack direction="column" spacing={6}>
-          <Stack direction="row" spacing={2}>
+          <Stack direction="row" spacing={2} flexWrap="wrap">
             <Button variant="contained" onClick={props.onCapture}>
               Capure
             </Button>
             <Switch onChange={onToggleLoop} checked={props.loopState} />
             <RetrainButton></RetrainButton>
+            <Button variant="contained" onClick={() => props.onAddExample('correct')}>
+              correct
+            </Button>
+            <Button variant="contained" onClick={() => props.onAddExample('incorrect')}>
+              incorrect
+            </Button>
+            <Button variant="contained" onClick={() => props.onFit()}>
+              fit
+            </Button>
           </Stack>
           { correct.length > 0 &&
           <LineChart
