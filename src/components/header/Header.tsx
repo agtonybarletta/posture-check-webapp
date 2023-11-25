@@ -46,12 +46,13 @@ function Header(props: any) {
             </IconButton>
           </Box>
           <MenuList>
-            <MenuItem></MenuItem>
             <MenuItem>
               {/*<ListItemIcon>
             <ContentCut fontSize="small" />
           </ListItemIcon>*/}
-              <ListItemText>Item 1</ListItemText>
+              <a href="about.html">
+              <ListItemText>About</ListItemText>
+              </a>
             </MenuItem>
             <MenuItem>
               {/*<ListItemIcon>

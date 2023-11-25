@@ -28,3 +28,6 @@ public/model/*
 /dist
 
 /package-lock.json
+
+/public/imgs/*
+!/public/imgs/effydesk-mmF11wi4AzM-unsplash-cropped.jpg
